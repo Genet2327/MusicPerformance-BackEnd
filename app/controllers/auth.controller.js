@@ -16,7 +16,7 @@ exports.login = async (req, res) => {
 
   var googleToken = req.body.credential;
 
-  const { OAuth2Client } = require("google-auth-library ml");
+  const { OAuth2Client } = require("google-auth-library mlms");
   const client = new OAuth2Client(google_id);
   async function verify() {
     const ticket = await client.verifyIdToken({
