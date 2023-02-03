@@ -1,0 +1,15 @@
+[Unit]
+Description=NodeJS Tutorial App
+After=network.target
+ 
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/nodeapps/performance-t6-backend/
+ExecStart=/usr/bin/npm run start
+Restart=on-failure
+ 
+[Install]
+WantedBy=multi-user.target
+
+
