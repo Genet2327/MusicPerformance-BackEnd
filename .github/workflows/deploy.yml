@@ -56,4 +56,4 @@ jobs:
                       sudo systemctl stop performance-t6-backend
                       sudo cp performance-t6-backend.service /lib/systemd/system/performance-t6-backend
                       sudo systemctl daemon-reload
-                      sudo systemctl performance-t6-backend
+                      sudo systemctl start performance-t6-backend
