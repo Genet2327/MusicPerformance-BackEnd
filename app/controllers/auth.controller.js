@@ -1,6 +1,7 @@
 const db = require("../models");
 const authconfig = require("../config/auth.config");
 const User = db.user;
+const Role = db.role;
 const Session = db.session;
 
 const { google } = require("googleapis");
@@ -35,6 +36,7 @@ exports.login = async (req, res) => {
   console.log(lastName);
 
   let user = {};
+  var userRoles = [];
 
   await User.findOne({
     where: {
@@ -44,13 +46,17 @@ exports.login = async (req, res) => {
     .then((data) => {
       if (data != null) {
         user = data.dataValues;
+        data.getRoles().then((roles) => {
+          for (let i = 0; i < roles.length; i++) {
+            userRoles.push(roles[i].name.toUpperCase());
+          }
+        });
       } else {
         // create a new User and save to database
         user = {
           fName: firstName,
           lName: lastName,
           email: email,
-          role:"STU"
         };
       }
     })
@@ -66,7 +72,17 @@ exports.login = async (req, res) => {
       .then((data) => {
         console.log("user was registered");
         user = data.dataValues;
-        // res.send({ message: "User was registered successfully!" });
+
+        // user role = 1
+        data.setRoles([2]).then(() => {
+          res.send({ message: "User was registered successfully!" });
+        });
+
+        data.getRoles().then((roles) => {
+          for (let i = 0; i < roles.length; i++) {
+            userRoles.push(roles[i].name.toUpperCase());
+          }
+        });
       })
       .catch((err) => {
         res.status(500).send({ message: err.message });
@@ -113,7 +129,7 @@ exports.login = async (req, res) => {
         lName: user.lName,
         userId: user.id,
         token: token,
-        role:user.role,
+        role: userRoles,
         // refresh_token: user.refresh_token,
         // expiration_date: user.expiration_date
       };
