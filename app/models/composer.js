@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const Composer = sequelize.define("composer", {
+    const Composer = sequelize.define( "composer" , {
       id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,

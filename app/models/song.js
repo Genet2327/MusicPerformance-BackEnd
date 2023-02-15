@@ -13,6 +13,7 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.DATE,
         allowNull: false,
       },
+      
       translation: {
         type: Sequelize.STRING,
         allowNull: false,
