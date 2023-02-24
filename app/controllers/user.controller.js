@@ -1,5 +1,7 @@
+const { role } = require("../models");
 const db = require("../models");
 const User = db.user;
+const Role = db.role;
 const Op = db.Sequelize.Op;
 
 // Create and Save a new User
@@ -18,7 +20,7 @@ exports.create = (req, res) => {
     fName: req.body.fName,
     lName: req.body.lName,
     email: req.body.email,
-    
+
     // refresh_token: req.body.refresh_token,
     // expiration_date: req.body.expiration_date
   };
@@ -40,7 +42,17 @@ exports.findAll = (req, res) => {
   const id = req.query.id;
   var condition = id ? { id: { [Op.like]: `%${id}%` } } : null;
 
-  User.findAll({ where: condition })
+  User.findAll(
+    {
+      include: [
+        {
+          model: Role,
+          as: "roles",
+        },
+      ],
+    },
+    { where: condition }
+  )
     .then((data) => {
       res.send(data);
     })
@@ -55,7 +67,14 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
-  User.findByPk(id)
+  User.findByPk(id, {
+    include: [
+      {
+        model: Role,
+        as: "roles",
+      },
+    ],
+  })
     .then((data) => {
       if (data) {
         res.send(data);
@@ -107,9 +126,24 @@ exports.update = (req, res) => {
   })
     .then((num) => {
       if (num == 1) {
-        res.send({
-          message: "User was updated successfully.",
-        });
+        User.findOne({
+          where: {
+            id: id,
+          },
+        })
+          .then((user) => {
+            if (!user) {
+              return res.status(404).send({ message: "User Not found." });
+            }
+            user.setRoles(req.body.roles).then(() => {});
+
+            res.send({
+              message: "User was updated successfully and set roles - " + req.body.roles,
+            });
+          })
+          .catch((err) => {
+            res.status(500).send({ message: err.message });
+          });       
       } else {
         res.send({
           message: `Cannot update User with id=${id}. Maybe User was not found or req.body is empty!`,
@@ -161,6 +195,18 @@ exports.deleteAll = (req, res) => {
       res.status(500).send({
         message:
           err.message || "Some error occurred while removing all people.",
+      });
+    });
+};
+
+exports.findAllRole = (req, res) => {
+  Role.findAll()
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Some error occurred while retrieving people.",
       });
     });
 };
