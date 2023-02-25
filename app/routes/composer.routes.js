@@ -4,7 +4,7 @@ module.exports = (app) => {
     var router = require("express").Router();
   
     // Create a new Composer
-    router.post("/", [authenticate], composer.create);
+    router.post("/" , [authenticate],composer.create);
   
     // Retrieve all People
     router.get("/", [authenticate], composer.findAll);
@@ -21,6 +21,6 @@ module.exports = (app) => {
     // Delete all Composer
     router.delete("/", [authenticate], composer.deleteAll);
   
-    app.use("/performance-t6/composer", router);
+    app.use("/performance-t6/composers", router);
   };
   
