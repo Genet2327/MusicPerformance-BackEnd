@@ -53,7 +53,7 @@ function initial() {
     name: "juges"
   });
   Role.create({
-    id: 4,
+    id: 5,
     name: "faculity"
   });
 }
