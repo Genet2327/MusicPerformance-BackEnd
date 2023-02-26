@@ -8,12 +8,8 @@ const app = express();
 const db = require("./app/models");
 const Role = db.role;
 
-//db.sequelize.sync();
- db.sequelize.sync()
-  .then(() => {
-    console.log("Synced db.");
-    initial();
-  })
+db.sequelize.sync();
+
 
 
 var corsOptions = {
