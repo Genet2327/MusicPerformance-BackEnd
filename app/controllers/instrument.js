@@ -5,7 +5,7 @@ const Op = db.Sequelize.Op;
 // Create and Save a new Instrument
 exports.create = (req, res) => {
   // Validate request
-  if (!req.body.fName) {
+  if (!req.body.name) {
     res.status(400).send({
       message: "Content can not be empty!",
     });
