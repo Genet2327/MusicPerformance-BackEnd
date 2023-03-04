@@ -9,10 +9,15 @@ const db = require("./app/models");
 const Role = db.role;
 
 db.sequelize.sync();
+
 // db.sequelize.sync({force: false}).then(() => {
 //   console.log('Drop and Resync Db');
 //   initial();
 // });
+
+
+
+
 
 
 var corsOptions = {
@@ -35,13 +40,17 @@ app.get("/", (req, res) => {
 
 
 function initial() {
+
  
  
   Role.create({
     id: 1,
     name: "Admin"
   });
-  Role.create({
+
+ 
+  
+    Role.create({
     id: 2,
     name: "Student"
   });
