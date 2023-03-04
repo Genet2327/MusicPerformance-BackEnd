@@ -9,14 +9,11 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      startTime: {
-        type: Sequelize.DATE,
+      durationSession: {
+        type: Sequelize.INTEGER,
         allowNull: false,
       },
-      endTime: {
-        type: Sequelize.DATE,
-        allowNull: false,
-      }, 
+     
     });
   
     return EventSessions;

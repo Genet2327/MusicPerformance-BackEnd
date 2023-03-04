@@ -5,10 +5,7 @@ module.exports = (sequelize, Sequelize) => {
         autoIncrement: true,
         primaryKey: true,
       },
-      type: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
+      
       date: {
         type: Sequelize.DATE,
         allowNull: false,
@@ -17,7 +14,11 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      durationSession: {
+      startTime: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      endTime: {
         type: Sequelize.STRING,
         allowNull: false
       },

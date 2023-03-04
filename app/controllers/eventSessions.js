@@ -5,7 +5,7 @@ const Op = db.Sequelize.Op;
 // Create and Save a new EventSessions
 exports.create = (req, res) => {
   // Validate request
-  if (!req.body.fName) {
+  if (!req.body.type) {
     res.status(400).send({
       message: "Content can not be empty!",
     });
@@ -16,8 +16,8 @@ exports.create = (req, res) => {
   const eventSessions = {
     id: req.body.id,
     type: req.body.type,
-    startTime: req.body.startTime,
-    endTime: req.body.endTime,
+    durationSession: req.body.durationSession,
+    
    
     
     // refresh_token: req.body.refresh_token,

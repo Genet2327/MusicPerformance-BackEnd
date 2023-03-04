@@ -78,14 +78,14 @@ db.availability.belongsTo(
   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
 );
 // foreign key for eventSessions for event
-db.event.hasMany(
-  db.eventSessions,
-  { as: "eventSessions" },
-  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
-);
-db.eventSessions.belongsTo(
+db.eventSessions.hasMany(
   db.event,
   { as: "event" },
+  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+);
+db.event.belongsTo(
+  db.eventSessions,
+  { as: "eventSessions" },
   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
 );
 // foreign key for eventSessions  Student 
