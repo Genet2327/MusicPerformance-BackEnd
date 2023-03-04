@@ -5,7 +5,7 @@ const Op = db.Sequelize.Op;
 // Create and Save a new Event
 exports.create = (req, res) => {
   // Validate request
-  if (!req.body.fName) {
+  if (!req.body.room) {
     res.status(400).send({
       message: "Content can not be empty!",
     });
@@ -15,10 +15,11 @@ exports.create = (req, res) => {
   // Create a Event
   const event = {
     id: req.body.id,
-    type: req.body.type,
+    eventSessionId: req.params.eventSessionId,
     date: req.body.date,
     room: req.body.room,
-    durationSession: req.body.durationSession,
+    startTime: req.body.startTime,
+    endTime: req.body.endTime,
     
     // refresh_token: req.body.refresh_token,
     // expiration_date: req.body.expiration_date
@@ -51,6 +52,19 @@ exports.findAll = (req, res) => {
       });
     });
 };
+exports.findAllForEventSession = (req, res) => {
+  const eventSessionId = req.params.eventSessionId;
+
+  Event.findAll({ where: { eventSessionId: eventSessionId } })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Some error occurred while retrieving lessons.",
+      });
+    });
+};
 
 // Find a single Event with an id
 exports.findOne = (req, res) => {
@@ -74,30 +88,7 @@ exports.findOne = (req, res) => {
 };
 
 // Find a single Event with an email
-exports.findByEmail = (req, res) => {
-  const email = req.params.email;
 
-  Event.findOne({
-    where: {
-      email: email,
-    },
-  })
-    .then((data) => {
-      if (data) {
-        res.send(data);
-      } else {
-        res.send({ email: "not found" });
-        /*res.status(404).send({
-          message: `Cannot find Event with email=${email}.`
-        });*/
-      }
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: "Error retrieving Event with email=" + email,
-      });
-    });
-};
 
 // Update a Event by the id in the request
 exports.update = (req, res) => {

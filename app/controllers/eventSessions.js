@@ -16,6 +16,7 @@ exports.create = (req, res) => {
   const eventSessions = {
     id: req.body.id,
     type: req.body.type,
+    durationSession: req.body.durationSession,
     
    
     

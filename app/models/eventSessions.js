@@ -9,6 +9,10 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      durationSession: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
      
     });
   

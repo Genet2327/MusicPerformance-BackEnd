@@ -4,23 +4,30 @@ module.exports = (app) => {
     var router = require("express").Router();
   
     // Create a new Event
-    router.post("/", [authenticate], event.create);
+    router.post("/:eventSessionId/events", [authenticate], event.create);
   
     // Retrieve all People
-    router.get("/", [authenticate], event.findAll);
+    router.get("/:eventSessionId/events/published", [authenticate], event.findAll);
+    router.get(
+      "/:eventSessionId/events",
+      [authenticate],
+      event.findAllForEventSession
+    );
+
+    
   
     // Retrieve a single Event with id
-    router.get("/:id", [authenticate], event.findOne);
+    router.get("/:eventSessionId/events/:id", [authenticate], event.findOne);
   
     // Update a Event with id
-    router.put("/:id", [authenticate], event.update);
+    router.put("/:eventSessionId/events/:id", [authenticate], event.update);
   
     // Delete a Event with id
-    router.delete("/:id", [authenticate], event.delete);
+    router.delete("/:eventSessionId/events/:id", [authenticate], event.delete);
   
     // Delete all Event
-    router.delete("/", [authenticate], event.deleteAll);
+    router.delete("/:eventSessionId/events", [authenticate], event.deleteAll);
   
-    app.use("/performance-t6/event", router);
+    app.use("/performance-t6/eventSessions", router);
   };
   
