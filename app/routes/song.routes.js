@@ -21,6 +21,6 @@ module.exports = (app) => {
     // Delete all Event
     router.delete("/", [authenticate], song.deleteAll);
   
-    app.use("/performance-t6/song", router);
+    app.use("/performance-t6/songs", router);
   };
   

@@ -10,11 +10,15 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: false,
       },
       language: {
-        type: Sequelize.DATE,
+        type: Sequelize.STRING,
         allowNull: false,
       },
       
-      translation: {
+      translationSong: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      lyrics: {
         type: Sequelize.STRING,
         allowNull: false,
       },
