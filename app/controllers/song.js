@@ -5,19 +5,14 @@ const Op = db.Sequelize.Op;
 // Create and Save a new Song
 exports.create = (req, res) => {
   // Validate request
-  if (!req.body.fName) {
-    res.status(400).send({
-      message: "Content can not be empty!",
-    });
-    return;
-  }
-
+ 
   // Create a Song
   const song = {
     id: req.body.id,
     name: req.body.name,
     language: req.body.language,
-    translation: req.body.translation,
+    translationSong: req.body.translationSong,
+    lyrics:req.body.lyrics,
    
     
     // refresh_token: req.body.refresh_token,

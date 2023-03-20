@@ -6,9 +6,6 @@ module.exports = (sequelize, Sequelize) => {
     },
     name: {
       type: Sequelize.STRING
-    },
-    faclity: {
-      type: Sequelize.BOOLEAN
     }
   });
 
