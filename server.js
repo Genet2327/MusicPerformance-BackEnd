@@ -79,6 +79,7 @@ require("./app/routes/song.routes")(app);
 require("./app/routes/repertoire.routes")(app);
 require("./app/routes/availability.routes")(app);
 require("./app/routes/role.routes")(app);
+require("./app/routes/studentSignup.routes")(app);
 // set port, listen for requests
 const PORT = process.env.PORT || 3026;
 app.listen(PORT, () => {
