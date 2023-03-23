@@ -29,6 +29,8 @@ db.repertoire = require("./repertoire.js")(sequelize, Sequelize);
 db.student = require("./student.js")(sequelize, Sequelize);
 db.availability = require("./availability.js")(sequelize, Sequelize);
 db.role = require("./role.js")(sequelize, Sequelize);
+db.role = require("./studentSignup.js")(sequelize, Sequelize);
+
 
 db.role.belongsToMany(db.user, {
   through: "user_roles",
