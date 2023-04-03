@@ -1,6 +1,136 @@
 const db = require("../models");
 const Event = db.event;
+const User = db.user;
+const Avalability = db.avalability;
 const Op = db.Sequelize.Op;
+
+exports.AvalabilityByUserId = (req, res) => {
+  const userId = req.params.id;
+  return User.findByPk(userId, {
+    include: [
+      {
+        model: Event,
+        as: "Events",
+        attributes: ["id", "date", "room", "startTime", "endTime"],
+        through: {
+          attributes: [],
+        },
+      },
+    ],
+  })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message:
+          err.message ||
+          "Some error occurred while creating the AvalabilityByUserId.",
+      });
+    });
+};
+
+exports.addandRemoveAvalability = (req, res) => {
+  var data = {
+    eventId: req.body.eventId,
+    userId: req.body.userId,
+    isSelected: true,
+  };
+  Avalability.create(data)
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while creating the Avalability.",
+      });
+    });
+};
+
+exports.findAllAvalability = (req, res) => {
+  User.findAll({
+    include: [
+      {
+        model: Event,
+        as: "Events",
+        attributes: ["id", "room", "startTime", "endTime"],
+      },
+    ],
+  })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while findAllAvalability people.",
+      });
+    });
+};
+
+exports.findAvalabilityById = async (req, res) => {
+  const id = req.params.id;
+  var avalabilityEvents = [];
+  let user = {};
+
+  await User.findByPk(id)
+    .then((data) => {
+      if (data != null) {
+        user = data.dataValues;
+        data.getEvents().then((e) => {
+          for (let i = 0; i < e.length; i++) {
+            var array = e[i];
+
+            console.log(array.dataValues.room.TO);
+            // array.forEach((element) => {
+            //   console.log(element);
+            //   // avalabilityEvents.push(element.room);
+            // });
+          }
+        });
+
+        let userInfo = {
+          email: user.email,
+          fName: user.fName,
+          lName: user.lName,
+          userId: user.id,
+          avalabilityEvents: avalabilityEvents,
+        };
+        console.log(userInfo);
+        res.send(userInfo);
+      }
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while findAllAvalability people.",
+      });
+    });
+};
+
+exports.deleteAvalability = (req, res) => {
+  const id = req.params.id;
+  Avalability.destroy({
+    where: { id: id },
+  })
+    .then((num) => {
+      if (num == 1) {
+        res.send({
+          message: "deleteAvalability was deleted successfully!",
+        });
+      } else {
+        res.send({
+          message: `Cannot delete deleteAvalability with id=${id}. Maybe deleteAvalability was not found!`,
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: "Could not delete deleteAvalability with id=" + id,
+      });
+    });
+};
 
 // Create and Save a new Event
 exports.create = (req, res) => {
@@ -20,7 +150,7 @@ exports.create = (req, res) => {
     room: req.body.room,
     startTime: req.body.startTime,
     endTime: req.body.endTime,
-    
+
     // refresh_token: req.body.refresh_token,
     // expiration_date: req.body.expiration_date
   };
@@ -55,7 +185,17 @@ exports.findAll = (req, res) => {
 exports.findAllForEventSession = (req, res) => {
   const eventSessionId = req.params.eventSessionId;
 
-  Event.findAll({ where: { eventSessionId: eventSessionId } })
+  Event.findAll(
+    { where: { eventSessionId: eventSessionId } },
+    {
+      include: [
+        {
+          model: Avalability,
+          as: "avalability",
+        },
+      ],
+    }
+  )
     .then((data) => {
       res.send(data);
     })
@@ -88,7 +228,6 @@ exports.findOne = (req, res) => {
 };
 
 // Find a single Event with an email
-
 
 // Update a Event by the id in the request
 exports.update = (req, res) => {
@@ -156,3 +295,26 @@ exports.deleteAll = (req, res) => {
       });
     });
 };
+
+// return Event.findByPk(data.eventId)
+//   .then((event) => {
+//     if (!event) {
+//       console.log("Event not found!");
+//       return null;
+//     }
+//     return User.findByPk(data.userId).then((user) => {
+//       if (!user) {
+//         console.log("User not found!");
+//         return null;
+//       }
+
+//       event.addUser(user);
+//       console.log(`>> added User id=${user.id} to Event id=${event.id}`);
+//       res.send(`>> added User id=${user.id} to Event id=${event.id}`);
+//     });
+//   })
+//   .catch((err) => {
+//     res.status(500).send({
+//       message: err.message || "Error while adding User to Events",
+//     });
+//   });

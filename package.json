@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "bundle":  "mkdir deploy && cp -r app server.js package.json package-lock.json performance-t6-backend.service .env deploy"
+    "bundle": "mkdir deploy && cp -r app server.js package.json package-lock.json performance-t6-backend.service .env deploy"
   },
   "keywords": [
     "node.js",
@@ -22,7 +22,7 @@
     "googleapis": "^100.0.0",
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.3.3",
-    "sequelize": "^6.19.0",
-    "parser": "^0.1.4"
+    "parser": "^0.1.4",
+    "sequelize": "^6.19.0"
   }
 }

@@ -1,38 +1,58 @@
 const db = require("../models");
-const EventSessions = db.eventSessions;
-const Event = db.event;
+const Avalability = db.avalability;
 const Op = db.Sequelize.Op;
 
-// Create and Save a new EventSessions
-exports.create = (req, res) => {
-  // Validate request
-  if (!req.body.type) {
-    res.status(400).send({
-      message: "Content can not be empty!",
-    });
-    return;
-  }
+exports.findOneByEventIdandUserId = (req, res) => {
+  const eventId = req.params.eventId;
+  const userId = req.params.userId;
 
-  // Create a EventSessions
-  const eventSessions = {
-    id: req.body.id,
-    type: req.body.type,
-    durationSession: req.body.durationSession,
-
-    // refresh_token: req.body.refresh_token,
-    // expiration_date: req.body.expiration_date
-  };
-
-  // Save EventSessions in the database
-  EventSessions.create(eventSessions)
+  Avalability.findOne({
+    where: {
+      eventId: eventId,
+      userId: userId,
+    },
+  })
     .then((data) => {
       res.send(data);
     })
     .catch((err) => {
       res.status(500).send({
         message:
-          err.message ||
-          "Some error occurred while creating the EventSessions.",
+          err.message || "Some error occurred while findAllAvalability people.",
+      });
+    });
+};
+
+exports.findAllEvents = (req, res) => {
+  Avalability.findAll()
+    .then((data) => {
+     
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while findAllAvalability people.",
+      });
+    });
+};
+
+// Create and Save a new Avalability
+exports.create = (req, res) => {
+  var data = {
+    eventId: req.body.eventId,
+    userId: req.body.userId,
+    isSelected: true
+  };
+  // Save Avalability in the database
+  Avalability.create(data)
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while creating the Avalability.",
       });
     });
 };
@@ -42,17 +62,7 @@ exports.findAll = (req, res) => {
   const id = req.query.id;
   var condition = id ? { id: { [Op.like]: `%${id}%` } } : null;
 
-  EventSessions.findAll(
-    {
-      include: [
-        {
-          model: Event,
-          as: "event",
-        },
-      ],
-    },
-    { where: condition }
-  )
+  Avalability.findAll({ where: condition })
     .then((data) => {
       res.send(data);
     })
@@ -63,32 +73,32 @@ exports.findAll = (req, res) => {
     });
 };
 
-// Find a single EventSessions with an id
+// Find a single Avalability with an id
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
-  EventSessions.findByPk(id)
+  Avalability.findByPk(id)
     .then((data) => {
       if (data) {
         res.send(data);
       } else {
         res.status(404).send({
-          message: `Cannot find EventSessions with id=${id}.`,
+          message: `Cannot find Avalability with id=${id}.`,
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error retrieving EventSessions with id=" + id,
+        message: "Error retrieving Avalability with id=" + id,
       });
     });
 };
 
-// Find a single EventSessions with an email
+// Find a single Avalability with an email
 exports.findByEmail = (req, res) => {
   const email = req.params.email;
 
-  EventSessions.findOne({
+  Avalability.findOne({
     where: {
       email: email,
     },
@@ -99,70 +109,70 @@ exports.findByEmail = (req, res) => {
       } else {
         res.send({ email: "not found" });
         /*res.status(404).send({
-          message: `Cannot find EventSessions with email=${email}.`
+          message: `Cannot find Avalability with email=${email}.`
         });*/
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error retrieving EventSessions with email=" + email,
+        message: "Error retrieving Avalability with email=" + email,
       });
     });
 };
 
-// Update a EventSessions by the id in the request
+// Update a Avalability by the id in the request
 exports.update = (req, res) => {
   const id = req.params.id;
 
-  EventSessions.update(req.body, {
+  Avalability.update(req.body, {
     where: { id: id },
   })
     .then((num) => {
       if (num == 1) {
         res.send({
-          message: "EventSessions was updated successfully.",
+          message: "Avalability was updated successfully.",
         });
       } else {
         res.send({
-          message: `Cannot update EventSessions with id=${id}. Maybe EventSessions was not found or req.body is empty!`,
+          message: `Cannot update Avalability with id=${id}. Maybe Avalability was not found or req.body is empty!`,
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error updating EventSessions with id=" + id,
+        message: "Error updating Avalability with id=" + id,
       });
     });
 };
 
-// Delete a EventSessions with the specified id in the request
+// Delete a Avalability with the specified id in the request
 exports.delete = (req, res) => {
   const id = req.params.id;
 
-  EventSessions.destroy({
+  Avalability.destroy({
     where: { id: id },
   })
     .then((num) => {
       if (num == 1) {
         res.send({
-          message: "EventSessions was deleted successfully!",
+          message: "Avalability was deleted successfully!",
         });
       } else {
         res.send({
-          message: `Cannot delete EventSessions with id=${id}. Maybe EventSessions was not found!`,
+          message: `Cannot delete Avalability with id=${id}. Maybe Avalability was not found!`,
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Could not delete EventSessions with id=" + id,
+        message: "Could not delete Avalability with id=" + id,
       });
     });
 };
 
 // Delete all People from the database.
 exports.deleteAll = (req, res) => {
-  EventSessions.destroy({
+  Avalability.destroy({
     where: {},
     truncate: false,
   })

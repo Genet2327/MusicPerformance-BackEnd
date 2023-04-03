@@ -1,38 +1,35 @@
 const db = require("../models");
-const EventSessions = db.eventSessions;
-const Event = db.event;
+const UserEvent = db.userEvent;
 const Op = db.Sequelize.Op;
 
-// Create and Save a new EventSessions
+// Create and Save a new UserEvent
 exports.create = (req, res) => {
   // Validate request
-  if (!req.body.type) {
+  if (!req.body.fName) {
     res.status(400).send({
       message: "Content can not be empty!",
     });
     return;
   }
 
-  // Create a EventSessions
-  const eventSessions = {
-    id: req.body.id,
-    type: req.body.type,
-    durationSession: req.body.durationSession,
-
+  // Create a UserEvent
+  const userEvent = {
+    userId: req.body.userId,
+    eventId: req.body.eventId,
+   
+    
     // refresh_token: req.body.refresh_token,
     // expiration_date: req.body.expiration_date
   };
 
-  // Save EventSessions in the database
-  EventSessions.create(eventSessions)
+  // Save UserEvent in the database
+  UserEvent.create(userEvent)
     .then((data) => {
       res.send(data);
     })
     .catch((err) => {
       res.status(500).send({
-        message:
-          err.message ||
-          "Some error occurred while creating the EventSessions.",
+        message: err.message || "Some error occurred while creating the UserEvent.",
       });
     });
 };
@@ -42,17 +39,7 @@ exports.findAll = (req, res) => {
   const id = req.query.id;
   var condition = id ? { id: { [Op.like]: `%${id}%` } } : null;
 
-  EventSessions.findAll(
-    {
-      include: [
-        {
-          model: Event,
-          as: "event",
-        },
-      ],
-    },
-    { where: condition }
-  )
+  UserEvent.findAll({ where: condition })
     .then((data) => {
       res.send(data);
     })
@@ -63,32 +50,32 @@ exports.findAll = (req, res) => {
     });
 };
 
-// Find a single EventSessions with an id
+// Find a single UserEvent with an id
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
-  EventSessions.findByPk(id)
+  UserEvent.findByPk(id)
     .then((data) => {
       if (data) {
         res.send(data);
       } else {
         res.status(404).send({
-          message: `Cannot find EventSessions with id=${id}.`,
+          message: `Cannot find UserEvent with id=${id}.`,
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error retrieving EventSessions with id=" + id,
+        message: "Error retrieving UserEvent with id=" + id,
       });
     });
 };
 
-// Find a single EventSessions with an email
+// Find a single UserEvent with an email
 exports.findByEmail = (req, res) => {
   const email = req.params.email;
 
-  EventSessions.findOne({
+  UserEvent.findOne({
     where: {
       email: email,
     },
@@ -99,70 +86,70 @@ exports.findByEmail = (req, res) => {
       } else {
         res.send({ email: "not found" });
         /*res.status(404).send({
-          message: `Cannot find EventSessions with email=${email}.`
+          message: `Cannot find UserEvent with email=${email}.`
         });*/
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error retrieving EventSessions with email=" + email,
+        message: "Error retrieving UserEvent with email=" + email,
       });
     });
 };
 
-// Update a EventSessions by the id in the request
+// Update a UserEvent by the id in the request
 exports.update = (req, res) => {
   const id = req.params.id;
 
-  EventSessions.update(req.body, {
+  UserEvent.update(req.body, {
     where: { id: id },
   })
     .then((num) => {
       if (num == 1) {
         res.send({
-          message: "EventSessions was updated successfully.",
+          message: "UserEvent was updated successfully.",
         });
       } else {
         res.send({
-          message: `Cannot update EventSessions with id=${id}. Maybe EventSessions was not found or req.body is empty!`,
+          message: `Cannot update UserEvent with id=${id}. Maybe UserEvent was not found or req.body is empty!`,
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error updating EventSessions with id=" + id,
+        message: "Error updating UserEvent with id=" + id,
       });
     });
 };
 
-// Delete a EventSessions with the specified id in the request
+// Delete a UserEvent with the specified id in the request
 exports.delete = (req, res) => {
   const id = req.params.id;
 
-  EventSessions.destroy({
+  UserEvent.destroy({
     where: { id: id },
   })
     .then((num) => {
       if (num == 1) {
         res.send({
-          message: "EventSessions was deleted successfully!",
+          message: "UserEvent was deleted successfully!",
         });
       } else {
         res.send({
-          message: `Cannot delete EventSessions with id=${id}. Maybe EventSessions was not found!`,
+          message: `Cannot delete UserEvent with id=${id}. Maybe UserEvent was not found!`,
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Could not delete EventSessions with id=" + id,
+        message: "Could not delete UserEvent with id=" + id,
       });
     });
 };
 
 // Delete all People from the database.
 exports.deleteAll = (req, res) => {
-  EventSessions.destroy({
+  UserEvent.destroy({
     where: {},
     truncate: false,
   })

@@ -16,12 +16,7 @@ exports.create = (req, res) => {
   const student = {
     id: req.body.id,
     level: req.body.level,
-    major: req.body.major,
-   
-   
-    
-    // refresh_token: req.body.refresh_token,
-    // expiration_date: req.body.expiration_date
+    major: req.body.major
   };
 
   // Save Student in the database
