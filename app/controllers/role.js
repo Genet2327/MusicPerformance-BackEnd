@@ -73,30 +73,7 @@ exports.findOne = (req, res) => {
 };
 
 // Find a single Role with an email
-exports.findByEmail = (req, res) => {
-  const email = req.params.email;
 
-  Role.findOne({
-    where: {
-      email: email,
-    },
-  })
-    .then((data) => {
-      if (data) {
-        res.send(data);
-      } else {
-        res.send({ email: "not found" });
-        /*res.status(404).send({
-          message: `Cannot find Role with email=${email}.`
-        });*/
-      }
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: "Error retrieving Role with email=" + email,
-      });
-    });
-};
 
 // Update a Role by the id in the request
 exports.update = (req, res) => {

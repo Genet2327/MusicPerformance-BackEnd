@@ -17,8 +17,6 @@ db.sequelize = sequelize;
 
 db.user = require("./user.model.js")(sequelize, Sequelize);
 db.session = require("./session.model.js")(sequelize, Sequelize);
-
-
 db.event = require("./event.js")(sequelize, Sequelize);
 db.eventSessions = require("./eventSessions.js")(sequelize, Sequelize);
 db.instrument = require("./instrument.js")(sequelize, Sequelize);
@@ -27,21 +25,24 @@ db.song = require("./song.js")(sequelize, Sequelize);
 db.critique = require("./critique.js")(sequelize, Sequelize);
 db.repertoire = require("./repertoire.js")(sequelize, Sequelize);
 db.student = require("./student.js")(sequelize, Sequelize);
-db.availability = require("./availability.js")(sequelize, Sequelize);
 db.role = require("./role.js")(sequelize, Sequelize);
+db.userEvent = require("./userEvent")(sequelize, Sequelize);
+db.avalability = require("./avalability")(sequelize, Sequelize);
+db.signUp = require("./signUp.js")(sequelize, Sequelize);
+
 
 db.role.belongsToMany(db.user, {
   through: "user_roles",
   foreignKey: "roleId",
-  otherKey: "userId"
+  otherKey: "userId",
 });
 db.user.belongsToMany(db.role, {
   through: "user_roles",
   foreignKey: "userId",
-  otherKey: "roleId"
+  otherKey: "roleId",
 });
 
-db.ROLES = ["Student", "Admin", "Accompanist","juges","faculity"];
+
 // foreign key for session
 db.user.hasMany(
   db.session,
@@ -54,29 +55,64 @@ db.session.belongsTo(
   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
 );
 
+db.event.belongsToMany(db.user, {
+  through: "avalability",
+  as: "users",
+  foreignKey: "eventId", onDelete: 'CASCADE' ,
+  otherKey: "userId",
+});
+db.user.belongsToMany(db.event, {
+  through: "avalability",
+  as: "Events",
+  foreignKey: "userId", onDelete: 'CASCADE' ,
+  otherKey: "eventId",
+});
 
-// foreign key for Availability Faculity id
+
 db.user.hasMany(
-  db.availability,
-  { as: "availability" },
+  db.avalability,
+  { as: "avalability" },
   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
 );
-db.availability.belongsTo(
+db.avalability.belongsTo(
   db.user,
   { as: "user" },
   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
 );
-// foreign key for Availability
+
 db.event.hasMany(
-  db.availability,
-  { as: "availability" },
+  db.avalability,
+  { as: "avalability" },
   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
 );
-db.availability.belongsTo(
+db.avalability.belongsTo(
   db.event,
   { as: "event" },
   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
 );
+
+// foreign key for Availability Faculity id
+// db.user.hasMany(
+//   db.availability,
+//   { as: "availability" },
+//   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+// );
+// db.availability.belongsTo(
+//   db.user,
+//   { as: "user" },
+//   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+// );
+// // foreign key for Availability
+// db.event.hasMany(
+//   db.availability,
+//   { as: "availability" },
+//   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+// );
+// db.availability.belongsTo(
+//   db.event,
+//   { as: "event" },
+//   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+// );
 // foreign key for eventSessions for event
 db.eventSessions.hasMany(
   db.event,
@@ -88,17 +124,28 @@ db.event.belongsTo(
   { as: "eventSessions" },
   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
 );
-// foreign key for eventSessions  Student 
-db.user.hasMany(
-  db.eventSessions,
-  { as: "eventSessions" },
-  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
-);
-db.eventSessions.belongsTo(
-  db.user,
-  { as: "user" },
-  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
-);
+// db.user.hasMany(
+//   db.event,
+//   { as: "event" },
+//   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+// );
+// db.event.belongsTo(
+//   db.user,
+//   { as: "user" },
+//   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+// );
+
+// foreign key for eventSessions  Student
+// db.user.hasMany(
+//   db.event,
+//   { as: "event" },
+//   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+// );
+// db.event.belongsTo(
+//   db.user,
+//   { as: "user" },
+//   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+// );
 // foreign key for eventSessions  Critique
 db.user.hasMany(
   db.critique,
@@ -143,7 +190,7 @@ db.repertoire.belongsTo(
   { as: "eventSessions" },
   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
 );
-// foreign key for repertoire critique 
+// foreign key for repertoire critique
 db.critique.hasMany(
   db.repertoire,
   { as: "repertoire" },
@@ -154,7 +201,7 @@ db.repertoire.belongsTo(
   { as: "critique" },
   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
 );
-// foreign key for instrument student 
+// foreign key for instrument student
 db.user.hasMany(
   db.instrument,
   { as: "instrument" },
@@ -165,7 +212,42 @@ db.instrument.belongsTo(
   { as: "user" },
   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
 );
-// foreign key for Song composer 
+
+db.user.hasMany(
+  db.signUp,
+  { as: "signUp" },
+  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+);
+db.signUp.belongsTo(
+  db.user,
+  { as: "user" },
+  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+);
+
+db.event.hasMany(
+  db.signUp,
+  { as: "signUp" },
+  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+);
+db.signUp.belongsTo(
+  db.event,
+  { as: "event" },
+  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+);
+
+db.instrument.hasMany(
+  db.signUp,
+  { as: "signUp" },
+  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+);
+db.signUp.belongsTo(
+  db.instrument,
+  { as: "instrument" },
+  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+);
+
+
+// foreign key for Song composer
 // db.composer.hasMany(
 //   db.song,
 //   { as: "song" },

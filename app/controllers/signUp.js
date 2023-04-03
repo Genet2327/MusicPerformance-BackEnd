@@ -1,35 +1,31 @@
 const db = require("../models");
-const Availability = db.availability;
+const SignUp = db.signUp;
 const Op = db.Sequelize.Op;
 
-// Create and Save a new Availability
+// Create and Save a new SignUp
 exports.create = (req, res) => {
   // Validate request
-  if (!req.body.fName) {
-    res.status(400).send({
-      message: "Content can not be empty!",
-    });
-    return;
-  }
+  
 
-  // Create a Availability
-  const availability = {
+  // Create a SignUp
+  const signUp = {
     id: req.body.id,
-    
+    userId: req.body.userId,
+    eventId: req.body.eventId,
    
     
     // refresh_token: req.body.refresh_token,
     // expiration_date: req.body.expiration_date
   };
 
-  // Save Availability in the database
-  Availability.create(availability)
+  // Save SignUp in the database
+  SignUp.create(signUp)
     .then((data) => {
       res.send(data);
     })
     .catch((err) => {
       res.status(500).send({
-        message: err.message || "Some error occurred while creating the Availability.",
+        message: err.message || "Some error occurred while creating the SignUp.",
       });
     });
 };
@@ -39,7 +35,7 @@ exports.findAll = (req, res) => {
   const id = req.query.id;
   var condition = id ? { id: { [Op.like]: `%${id}%` } } : null;
 
-  Availability.findAll({ where: condition })
+  SignUp.findAll({ where: condition })
     .then((data) => {
       res.send(data);
     })
@@ -50,32 +46,32 @@ exports.findAll = (req, res) => {
     });
 };
 
-// Find a single Availability with an id
+// Find a single SignUp with an id
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
-  Availability.findByPk(id)
+  SignUp.findByPk(id)
     .then((data) => {
       if (data) {
         res.send(data);
       } else {
         res.status(404).send({
-          message: `Cannot find Availability with id=${id}.`,
+          message: `Cannot find SignUp with id=${id}.`,
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error retrieving Availability with id=" + id,
+        message: "Error retrieving SignUp with id=" + id,
       });
     });
 };
 
-// Find a single Availability with an email
+// Find a single SignUp with an email
 exports.findByEmail = (req, res) => {
   const email = req.params.email;
 
-  Availability.findOne({
+  SignUp.findOne({
     where: {
       email: email,
     },
@@ -86,70 +82,70 @@ exports.findByEmail = (req, res) => {
       } else {
         res.send({ email: "not found" });
         /*res.status(404).send({
-          message: `Cannot find Availability with email=${email}.`
+          message: `Cannot find SignUp with email=${email}.`
         });*/
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error retrieving Availability with email=" + email,
+        message: "Error retrieving SignUp with email=" + email,
       });
     });
 };
 
-// Update a Availability by the id in the request
+// Update a SignUp by the id in the request
 exports.update = (req, res) => {
   const id = req.params.id;
 
-  Availability.update(req.body, {
+  SignUp.update(req.body, {
     where: { id: id },
   })
     .then((num) => {
       if (num == 1) {
         res.send({
-          message: "Availability was updated successfully.",
+          message: "SignUp was updated successfully.",
         });
       } else {
         res.send({
-          message: `Cannot update Availability with id=${id}. Maybe Availability was not found or req.body is empty!`,
+          message: `Cannot update SignUp with id=${id}. Maybe SignUp was not found or req.body is empty!`,
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error updating Availability with id=" + id,
+        message: "Error updating SignUp with id=" + id,
       });
     });
 };
 
-// Delete a Availability with the specified id in the request
+// Delete a SignUp with the specified id in the request
 exports.delete = (req, res) => {
   const id = req.params.id;
 
-  Availability.destroy({
+  SignUp.destroy({
     where: { id: id },
   })
     .then((num) => {
       if (num == 1) {
         res.send({
-          message: "Availability was deleted successfully!",
+          message: "SignUp was deleted successfully!",
         });
       } else {
         res.send({
-          message: `Cannot delete Availability with id=${id}. Maybe Availability was not found!`,
+          message: `Cannot delete SignUp with id=${id}. Maybe SignUp was not found!`,
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Could not delete Availability with id=" + id,
+        message: "Could not delete SignUp with id=" + id,
       });
     });
 };
 
 // Delete all People from the database.
 exports.deleteAll = (req, res) => {
-  Availability.destroy({
+  SignUp.destroy({
     where: {},
     truncate: false,
   })
