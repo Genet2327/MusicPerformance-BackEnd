@@ -8,15 +8,12 @@ const app = express();
 const db = require("./app/models");
 const Role = db.role;
 
-//db.sequelize.sync();
+db.sequelize.sync();
 
-
-
-db.sequelize.sync({ force: true }).then(() => {
-  console.log("Drop and Resync Db");
-  
-});
- 
+// db.sequelize.sync({ force: true }).then(() => {
+//   console.log("Drop and Resync Db");
+//   initial();
+// });
 
 var corsOptions = {
   origin: "http://localhost:8081",
@@ -57,7 +54,7 @@ function initial() {
     id: 5,
     name: "faculity",
   });
-};
+}
 
 require("./app/routes/auth.routes.js")(app);
 require("./app/routes/user.routes")(app);
