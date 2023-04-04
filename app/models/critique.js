@@ -5,6 +5,10 @@ module.exports = (sequelize, Sequelize) => {
         autoIncrement: true,
         primaryKey: true,
       },
+      stagedeportment: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       tone: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -25,7 +29,14 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING,
         allowNull: false
       },
-      
+      diction: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      performance: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
     });
   
     return Critique;
