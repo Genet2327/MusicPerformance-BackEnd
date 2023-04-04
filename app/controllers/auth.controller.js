@@ -208,6 +208,7 @@ exports.logout = async (req, res) => {
   let session = {};
   await Session.findAll({ where: { token: req.body.token } })
     .then((data) => {
+      console.log("logout token", data);
       session = data[0].dataValues;
     })
     .catch((err) => {
