@@ -4,22 +4,19 @@ const Op = db.Sequelize.Op;
 
 // Create and Save a new Critique
 exports.create = (req, res) => {
-  // Validate request
-  if (!req.body.fName) {
-    res.status(400).send({
-      message: "Content can not be empty!",
-    });
-    return;
-  }
+  
 
   // Create a Critique
   const critique = {
     id: req.body.id,
+    stagedeportment: req.body.stagedeportment,
     tone: req.body.tone,
     accuracy: req.body.accuracy,
     technique: req.body.technique,
     interpretation: req.body.interpretation,
     balanceblend: req.body.balanceblend,
+    diction: req.body.diction,
+    performance: req.body.performance,
     
     // refresh_token: req.body.refresh_token,
     // expiration_date: req.body.expiration_date
