@@ -48,11 +48,11 @@ function initial() {
   });
   Role.create({
     id: 4,
-    name: "juges",
+    name: "Juges",
   });
   Role.create({
     id: 5,
-    name: "faculity",
+    name: "Faculity",
   });
 }
 
@@ -69,6 +69,7 @@ require("./app/routes/role.routes")(app);
 require("./app/routes/studentEvent.routes")(app);
 require("./app/routes/signUp.routes")(app);
 require("./app/routes/avalability.routes")(app);
+require("./app/routes/songCritiques.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 3026;

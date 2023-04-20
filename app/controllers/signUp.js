@@ -5,17 +5,14 @@ const Op = db.Sequelize.Op;
 // Create and Save a new SignUp
 exports.create = (req, res) => {
   // Validate request
-  
 
   // Create a SignUp
   const signUp = {
     id: req.body.id,
     userId: req.body.userId,
-    eventId: req.body.eventId,
-   
-    
-    // refresh_token: req.body.refresh_token,
-    // expiration_date: req.body.expiration_date
+    instrumentId: req.body.instrumentId,
+    accompanistId: req.body.instrumentId,
+    durationSession: req.body.durationSession,
   };
 
   // Save SignUp in the database
@@ -25,7 +22,8 @@ exports.create = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: err.message || "Some error occurred while creating the SignUp.",
+        message:
+          err.message || "Some error occurred while creating the SignUp.",
       });
     });
 };
@@ -68,30 +66,6 @@ exports.findOne = (req, res) => {
 };
 
 // Find a single SignUp with an email
-exports.findByEmail = (req, res) => {
-  const email = req.params.email;
-
-  SignUp.findOne({
-    where: {
-      email: email,
-    },
-  })
-    .then((data) => {
-      if (data) {
-        res.send(data);
-      } else {
-        res.send({ email: "not found" });
-        /*res.status(404).send({
-          message: `Cannot find SignUp with email=${email}.`
-        });*/
-      }
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: "Error retrieving SignUp with email=" + email,
-      });
-    });
-};
 
 // Update a SignUp by the id in the request
 exports.update = (req, res) => {
@@ -139,23 +113,6 @@ exports.delete = (req, res) => {
     .catch((err) => {
       res.status(500).send({
         message: "Could not delete SignUp with id=" + id,
-      });
-    });
-};
-
-// Delete all People from the database.
-exports.deleteAll = (req, res) => {
-  SignUp.destroy({
-    where: {},
-    truncate: false,
-  })
-    .then((nums) => {
-      res.send({ message: `${nums} People were deleted successfully!` });
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while removing all people.",
       });
     });
 };

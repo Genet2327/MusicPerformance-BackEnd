@@ -17,8 +17,7 @@ exports.create = (req, res) => {
   const eventSessions = {
     id: req.body.id,
     type: req.body.type,
-    durationSession: req.body.durationSession,
-
+    
     // refresh_token: req.body.refresh_token,
     // expiration_date: req.body.expiration_date
   };

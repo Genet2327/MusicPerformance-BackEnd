@@ -3,6 +3,7 @@ module.exports = (app) => {
     const { authenticate } = require("../authorization/authorization.js");
     var router = require("express").Router();
   
+    router.get("/users/:id", avalability.findOneByEventId);
      router.get("/user/:userId/event/:eventId", avalability.findOneByEventIdandUserId);
 
     // Create a new Event

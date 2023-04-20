@@ -5,22 +5,22 @@ module.exports = (sequelize, Sequelize) => {
         autoIncrement: true,
         primaryKey: true,
       },
-      name: {
+      title: {
         type: Sequelize.STRING,
         allowNull: false,
       },
       language: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       
       translationSong: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       lyrics: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
       },
        
     });

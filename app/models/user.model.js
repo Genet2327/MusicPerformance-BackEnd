@@ -16,15 +16,23 @@ module.exports = (sequelize, Sequelize) => {
     email: {
       type: Sequelize.STRING,
       allowNull: false,
-    }
-    // refresh_token: {
-    //   type: Sequelize.STRING(512),
-    //   allowNull: true
-    // },
-    // expiration_date: {
-    //   type: Sequelize.DATE,
-    //   allowNull: true
-    // },
+    },
+    level: {
+      type: Sequelize.STRING,
+      allowNull: true,
+    },
+    major: {
+      type: Sequelize.DATE,
+      allowNull: true,
+    },
+    semesters: {
+      type: Sequelize.INTEGER,
+      allowNull: true,
+    },
+    classification: {
+      type: Sequelize.DATE,
+      allowNull: true,
+    },
   });
 
   return User;
