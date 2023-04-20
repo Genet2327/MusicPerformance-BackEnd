@@ -10,10 +10,10 @@ const Role = db.role;
 
 db.sequelize.sync();
 
-// db.sequelize.sync({ force: true }).then(() => {
-//   console.log("Drop and Resync Db");
-//   initial();
-// });
+//  db.sequelize.sync({ force: true }).then(() => {
+//    console.log("Drop and Resync Db");
+//    initial();
+//  });
 
 var corsOptions = {
   origin: "http://localhost:8081",
