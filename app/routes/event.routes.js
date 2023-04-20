@@ -27,6 +27,9 @@ module.exports = (app) => {
 
   // Delete all Event
   router.delete("/:eventSessionId/events", event.deleteAll);
-
+  router.get("/findAllNullSignUP/:id", event.findAllNullSignUP);
+  router.get("/findAllNotNullSignUP/:id/:userId", event.findAllNotNullSignUP);
+  // Retrieve a single Event with id
+  router.get("/events/:id", event.findOneEvent);
   app.use("/performance-t6/eventSessions", router);
 };

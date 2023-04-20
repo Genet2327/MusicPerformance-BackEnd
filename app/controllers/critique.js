@@ -1,40 +1,87 @@
 const db = require("../models");
 const Critique = db.critique;
+const Event = db.event;
+const SignUp = db.signUp;
+const User = db.user;
 const Op = db.Sequelize.Op;
+exports.findAllEvents = (req, res) => {
+  const id = req.params.id;
 
-// Create and Save a new Critique
+  Event.findAll({
+    where: { eventSessionId: id },
+    include: [
+      {
+        model: SignUp,
+        as: "signUp",
+        include: [
+          {
+            model: User,
+            as: "user",
+          },
+        ],
+      },
+    ],
+  })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Some error occurred while retrieving people.",
+      });
+    });
+};
+// exports.findAllEvents = (req, res) => {
+//   const eventSessionId = req.query.eventSessionId;
+//   Event.findAll({
+//     where: {
+//       eventSessionId: eventSessionId,
+//     },
+//     include: [
+//       {
+//         model: SignUp,
+//         as: "signUp",
+//         include: [
+//           {
+//             model: User,
+//             as: "user",
+//           },
+//         ],
+//       },
+//     ],
+//   })
+//     .then((data) => {
+//       res.send(data);
+//     })
+//     .catch((err) => {
+//       res.status(500).send({
+//         message: err.message || "Some error occurred while events.",
+//       });
+//     });
+// };
+
 exports.create = (req, res) => {
-  
-
-  // Create a Critique
   const critique = {
     id: req.body.id,
-    stagedeportment: req.body.stagedeportment,
     tone: req.body.tone,
     accuracy: req.body.accuracy,
     technique: req.body.technique,
     interpretation: req.body.interpretation,
     balanceblend: req.body.balanceblend,
-    diction: req.body.diction,
-    performance: req.body.performance,
-    
-    // refresh_token: req.body.refresh_token,
-    // expiration_date: req.body.expiration_date
   };
 
-  // Save Critique in the database
   Critique.create(critique)
     .then((data) => {
       res.send(data);
     })
     .catch((err) => {
       res.status(500).send({
-        message: err.message || "Some error occurred while creating the Critique.",
+        message:
+          err.message || "Some error occurred while creating the Critique.",
       });
     });
 };
 
-// Retrieve all People from the database.
 exports.findAll = (req, res) => {
   const id = req.query.id;
   var condition = id ? { id: { [Op.like]: `%${id}%` } } : null;
@@ -50,7 +97,6 @@ exports.findAll = (req, res) => {
     });
 };
 
-// Find a single Critique with an id
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
@@ -71,7 +117,6 @@ exports.findOne = (req, res) => {
     });
 };
 
-// Find a single Critique with an email
 exports.findByEmail = (req, res) => {
   const email = req.params.email;
 
@@ -85,9 +130,6 @@ exports.findByEmail = (req, res) => {
         res.send(data);
       } else {
         res.send({ email: "not found" });
-        /*res.status(404).send({
-          message: `Cannot find Critique with email=${email}.`
-        });*/
       }
     })
     .catch((err) => {
@@ -97,7 +139,6 @@ exports.findByEmail = (req, res) => {
     });
 };
 
-// Update a Critique by the id in the request
 exports.update = (req, res) => {
   const id = req.params.id;
 
@@ -122,7 +163,6 @@ exports.update = (req, res) => {
     });
 };
 
-// Delete a Critique with the specified id in the request
 exports.delete = (req, res) => {
   const id = req.params.id;
 
@@ -147,7 +187,6 @@ exports.delete = (req, res) => {
     });
 };
 
-// Delete all People from the database.
 exports.deleteAll = (req, res) => {
   Critique.destroy({
     where: {},

@@ -29,6 +29,7 @@ db.role = require("./role.js")(sequelize, Sequelize);
 db.userEvent = require("./userEvent")(sequelize, Sequelize);
 db.avalability = require("./avalability")(sequelize, Sequelize);
 db.signUp = require("./signUp.js")(sequelize, Sequelize);
+db.songCritiques = require("./songCritiques.js")(sequelize, Sequelize);
 
 
 db.role.belongsToMany(db.user, {
@@ -91,28 +92,7 @@ db.avalability.belongsTo(
   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
 );
 
-// foreign key for Availability Faculity id
-// db.user.hasMany(
-//   db.availability,
-//   { as: "availability" },
-//   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
-// );
-// db.availability.belongsTo(
-//   db.user,
-//   { as: "user" },
-//   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
-// );
-// // foreign key for Availability
-// db.event.hasMany(
-//   db.availability,
-//   { as: "availability" },
-//   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
-// );
-// db.availability.belongsTo(
-//   db.event,
-//   { as: "event" },
-//   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
-// );
+
 // foreign key for eventSessions for event
 db.eventSessions.hasMany(
   db.event,
@@ -124,29 +104,8 @@ db.event.belongsTo(
   { as: "eventSessions" },
   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
 );
-// db.user.hasMany(
-//   db.event,
-//   { as: "event" },
-//   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
-// );
-// db.event.belongsTo(
-//   db.user,
-//   { as: "user" },
-//   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
-// );
-
-// foreign key for eventSessions  Student
-// db.user.hasMany(
-//   db.event,
-//   { as: "event" },
-//   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
-// );
-// db.event.belongsTo(
-//   db.user,
-//   { as: "user" },
-//   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
-// );
-// foreign key for eventSessions  Critique
+;
+// foreign key for user  Critique
 db.user.hasMany(
   db.critique,
   { as: "critique" },
@@ -179,17 +138,8 @@ db.repertoire.belongsTo(
   { as: "song" },
   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
 );
-// foreign key for repertoire  EventSession
-db.eventSessions.hasMany(
-  db.repertoire,
-  { as: "repertoire" },
-  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
-);
-db.repertoire.belongsTo(
-  db.eventSessions,
-  { as: "eventSessions" },
-  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
-);
+
+
 // foreign key for repertoire critique
 db.critique.hasMany(
   db.repertoire,
@@ -212,7 +162,7 @@ db.instrument.belongsTo(
   { as: "user" },
   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
 );
-
+// signup and  user
 db.user.hasMany(
   db.signUp,
   { as: "signUp" },
@@ -223,18 +173,18 @@ db.signUp.belongsTo(
   { as: "user" },
   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
 );
-
-db.event.hasMany(
+//Signup and  event
+db.event.belongsTo(
   db.signUp,
   { as: "signUp" },
   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
 );
-db.signUp.belongsTo(
+db.signUp.hasMany(
   db.event,
   { as: "event" },
-  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+  { foreignKey: { allowNull: true }, onDelete: "CASCADE" }
 );
-
+//foreign key for Instrument signup
 db.instrument.hasMany(
   db.signUp,
   { as: "signUp" },
@@ -245,18 +195,59 @@ db.signUp.belongsTo(
   { as: "instrument" },
   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
 );
+//foreign key for Song composer
+db.song.belongsTo(
+  db.signUp,
+  { as: "signUp" },
+  { foreignKey: { allowNull: true }, onDelete: "CASCADE" }
+);
+db.signUp.hasMany(
+  db.song,
+  { as: "song" },
+  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+);
 
 
-// foreign key for Song composer
-// db.composer.hasMany(
-//   db.song,
-//   { as: "song" },
-//   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
-// );
-// db.composer.belongsTo(
-//   db.song,
-//   { as: "song" },
-//   { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
-// );
+//foreign key for Song composer
+db.composer.hasMany(
+  db.song,
+  { as: "song" },
+  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+);
+db.song.belongsTo(
+  db.composer,
+  { as: "composer" },
+  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+);
 
+db.song.hasMany(
+  db.songCritiques,
+  { as: "songCritiques" },
+  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+);
+db.songCritiques.belongsTo(
+  db.song,
+  { as: "song" },
+  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+);
+db.user.hasMany(
+  db.songCritiques,
+  { as: "songCritiques" },
+  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+);
+db.songCritiques.belongsTo(
+  db.user,
+  { as: "user" },
+  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+);
+db.critique.hasMany(
+  db.songCritiques,
+  { as: "songCritiques" },
+  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+);
+db.songCritiques.belongsTo(
+  db.critique,
+  { as: "critique" },
+  { foreignKey: { allowNull: false }, onDelete: "CASCADE" }
+);
 module.exports = db;

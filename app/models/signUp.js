@@ -5,7 +5,14 @@ module.exports = (sequelize, Sequelize) => {
         autoIncrement: true,
         primaryKey: true,
       },
-      
+      accompanistId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      durationSession: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      } 
     });  
     return SignUp;
   };

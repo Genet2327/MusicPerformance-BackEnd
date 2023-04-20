@@ -17,10 +17,10 @@ module.exports = (app) => {
   
     // Delete a Event with id
     router.delete("/:id", signUp.delete);
-  
-    // Delete all Event
-    router.delete("/", signUp.deleteAll);
-  
+   
+    
+   
+    
     app.use("/performance-t6/signUp", router);
   };
   

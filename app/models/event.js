@@ -21,15 +21,8 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
       allowNull: false,
     },
-    isSelected: {
-      type: Sequelize.BOOLEAN 
-    },
-    isApproved: {
-      type: Sequelize.INTEGER 
-    },
-    studentId: {
-      type: Sequelize.INTEGER 
-    }  
+   
+    
   });
 
   return Event;

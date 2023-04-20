@@ -1,8 +1,34 @@
 const db = require("../models");
-const Role = db.user;
+const User = db.user;
+const Role = db.role;
 const Op = db.Sequelize.Op;
 
-// Create and Save a new Role
+exports.findAllAccompanist = (req, res) => {
+ 
+  User.findAll(
+    {
+      include: [
+        {
+          model: Role,
+          as: "roles",
+          where : {name : 'Accompanist'}
+        },
+      ],
+    }
+  )
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while findOneByUserId people.",
+      });
+    });
+};
+
+
+// Create and Save a new User
 exports.create = (req, res) => {
   // Validate request
   if (!req.body.fName) {
@@ -12,7 +38,7 @@ exports.create = (req, res) => {
     return;
   }
 
-  // Create a Role
+  // Create a User
   const user = {
     id: req.body.id,
     name: req.body.name,
@@ -23,14 +49,14 @@ exports.create = (req, res) => {
     // expiration_date: req.body.expiration_date
   };
 
-  // Save Role in the database
-  Role.create(user)
+  // Save User in the database
+  User.create(user)
     .then((data) => {
       res.send(data);
     })
     .catch((err) => {
       res.status(500).send({
-        message: err.message || "Some error occurred while creating the Role.",
+        message: err.message || "Some error occurred while creating the User.",
       });
     });
 };
@@ -40,7 +66,7 @@ exports.findAll = (req, res) => {
   const id = req.query.id;
   var condition = id ? { id: { [Op.like]: `%${id}%` } } : null;
 
-  Role.findAll({ where: condition })
+  User.findAll({ where: condition })
     .then((data) => {
       res.send(data);
     })
@@ -51,83 +77,83 @@ exports.findAll = (req, res) => {
     });
 };
 
-// Find a single Role with an id
+// Find a single User with an id
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
-  Role.findByPk(id)
+  User.findByPk(id)
     .then((data) => {
       if (data) {
         res.send(data);
       } else {
         res.status(404).send({
-          message: `Cannot find Role with id=${id}.`,
+          message: `Cannot find User with id=${id}.`,
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error retrieving Role with id=" + id,
+        message: "Error retrieving User with id=" + id,
       });
     });
 };
 
-// Find a single Role with an email
+// Find a single User with an email
 
 
-// Update a Role by the id in the request
+// Update a User by the id in the request
 exports.update = (req, res) => {
   const id = req.params.id;
 
-  Role.update(req.body, {
+  User.update(req.body, {
     where: { id: id },
   })
     .then((num) => {
       if (num == 1) {
         res.send({
-          message: "Role was updated successfully.",
+          message: "User was updated successfully.",
         });
       } else {
         res.send({
-          message: `Cannot update Role with id=${id}. Maybe Role was not found or req.body is empty!`,
+          message: `Cannot update User with id=${id}. Maybe User was not found or req.body is empty!`,
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error updating Role with id=" + id,
+        message: "Error updating User with id=" + id,
       });
     });
 };
 
-// Delete a Role with the specified id in the request
+// Delete a User with the specified id in the request
 exports.delete = (req, res) => {
   const id = req.params.id;
 
-  Role.destroy({
+  User.destroy({
     where: { id: id },
   })
     .then((num) => {
       if (num == 1) {
         res.send({
-          message: "Role was deleted successfully!",
+          message: "User was deleted successfully!",
         });
       } else {
         res.send({
-          message: `Cannot delete Role with id=${id}. Maybe Role was not found!`,
+          message: `Cannot delete User with id=${id}. Maybe User was not found!`,
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Could not delete Role with id=" + id,
+        message: "Could not delete User with id=" + id,
       });
     });
 };
 
 // Delete all People from the database.
 exports.deleteAll = (req, res) => {
-  Role.destroy({
+  User.destroy({
     where: {},
     truncate: false,
   })

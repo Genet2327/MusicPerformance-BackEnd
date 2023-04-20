@@ -2,6 +2,7 @@ const db = require("../models");
 const Event = db.event;
 const User = db.user;
 const Avalability = db.avalability;
+const SignUp = db.signUp;
 const Op = db.Sequelize.Op;
 
 exports.AvalabilityByUserId = (req, res) => {
@@ -226,7 +227,25 @@ exports.findOne = (req, res) => {
       });
     });
 };
+exports.findOneEvent = (req, res) => {
+  const id = req.params.id;
 
+  Event.findByPk(id)
+    .then((data) => {
+      if (data) {
+        res.send(data);
+      } else {
+        res.status(404).send({
+          message: `Cannot find Event with id=${id}.`,
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: "Error retrieving Event with id=" + id,
+      });
+    });
+};
 // Find a single Event with an email
 
 // Update a Event by the id in the request
@@ -296,25 +315,43 @@ exports.deleteAll = (req, res) => {
     });
 };
 
-// return Event.findByPk(data.eventId)
-//   .then((event) => {
-//     if (!event) {
-//       console.log("Event not found!");
-//       return null;
-//     }
-//     return User.findByPk(data.userId).then((user) => {
-//       if (!user) {
-//         console.log("User not found!");
-//         return null;
-//       }
-
-//       event.addUser(user);
-//       console.log(`>> added User id=${user.id} to Event id=${event.id}`);
-//       res.send(`>> added User id=${user.id} to Event id=${event.id}`);
-//     });
-//   })
-//   .catch((err) => {
-//     res.status(500).send({
-//       message: err.message || "Error while adding User to Events",
-//     });
-//   });
+exports.findAllNullSignUP = (req, res) => {
+  const id = req.params.id;
+  Event.findAll({
+    where: { eventSessionId: id, signUpId: null },
+  })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Some error occurred while retrieving people.",
+      });
+    });
+};
+exports.findAllNotNullSignUP = (req, res) => {
+  const id = req.params.id;
+  const userId = req.params.userId;
+  Event.findAll({
+    where: { eventSessionId: id,  signUpId: {
+      [Op.not]: null,
+    },
+    
+  },
+  include: [
+    {
+      model: SignUp,
+      as: "signUp",
+      where: { userId: userId }
+    },
+  ],
+  })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Some error occurred while retrieving people.",
+      });
+    });
+};

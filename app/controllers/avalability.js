@@ -1,6 +1,31 @@
 const db = require("../models");
 const Avalability = db.avalability;
+const User = db.user;
 const Op = db.Sequelize.Op;
+
+exports.findOneByEventId = (req, res) => {
+  const id = req.params.id;
+  User.findAll(
+    {
+      include: [
+        {
+          model: Avalability,
+          as: "avalability",
+          where : {eventId : id}
+        },
+      ],
+    }
+  )
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while findOneByUserId people.",
+      });
+    });
+};
 
 exports.findOneByEventIdandUserId = (req, res) => {
   const eventId = req.params.eventId;
@@ -26,7 +51,6 @@ exports.findOneByEventIdandUserId = (req, res) => {
 exports.findAllEvents = (req, res) => {
   Avalability.findAll()
     .then((data) => {
-     
       res.send(data);
     })
     .catch((err) => {
@@ -42,7 +66,7 @@ exports.create = (req, res) => {
   var data = {
     eventId: req.body.eventId,
     userId: req.body.userId,
-    isSelected: true
+    isSelected: true,
   };
   // Save Avalability in the database
   Avalability.create(data)

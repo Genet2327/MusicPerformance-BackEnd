@@ -1,22 +1,75 @@
 const db = require("../models");
 const Song = db.song;
+const Composer = db.composer;
+const SignUp = db.signUp;
 const Op = db.Sequelize.Op;
+
+exports.findAllSongByUserId = (req, res) => {
+  const userId = req.params.id;
+  return Song.findAll({
+    include: [
+      {
+        model: SignUp,
+        as: "signUp",
+        where: {
+          userId: userId,
+        },
+      },
+      {
+        model: Composer,
+        as: "composer",
+      },
+    ],
+  })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message:
+          err.message ||
+          "Some error occurred while creating the AvalabilityByUserId.",
+      });
+    });
+};
+
+exports.findAllBySignUpId = (req, res) => {
+  const id = req.params.id;
+
+  Song.findAll({
+    include: [
+      {
+        model: Composer,
+        as: "composer",
+      },
+    ],
+    where: {
+      signUpId: id,
+    },
+  })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Some error occurred while signUpId people.",
+      });
+    });
+};
 
 // Create and Save a new Song
 exports.create = (req, res) => {
   // Validate request
- 
+
   // Create a Song
   const song = {
     id: req.body.id,
-    name: req.body.name,
+    title: req.body.title,
     language: req.body.language,
     translationSong: req.body.translationSong,
-    lyrics:req.body.lyrics,
-   
-    
-    // refresh_token: req.body.refresh_token,
-    // expiration_date: req.body.expiration_date
+    composerId: req.body.composerId,
+    lyrics: req.body.lyrics,
+    signUpId: req.body.signUpId,
   };
 
   // Save Song in the database
@@ -30,13 +83,40 @@ exports.create = (req, res) => {
       });
     });
 };
+exports.findAllByUserId = (req, res) => {
+  const userId = req.params.id;
+  return Song.findAll({
+    include: [
+      {
+        model: Composer,
+        as: "composer",
+      },
+    ],
+    where: {
+      userId: userId,
+    },
+  })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message:
+          err.message ||
+          "Some error occurred while creating the AvalabilityByUserId.",
+      });
+    });
+};
 
-// Retrieve all People from the database.
 exports.findAll = (req, res) => {
-  const id = req.query.id;
-  var condition = id ? { id: { [Op.like]: `%${id}%` } } : null;
-
-  Song.findAll({ where: condition })
+  Song.findAll({
+    include: [
+      {
+        model: Composer,
+        as: "composer",
+      },
+    ],
+  })
     .then((data) => {
       res.send(data);
     })
@@ -64,32 +144,6 @@ exports.findOne = (req, res) => {
     .catch((err) => {
       res.status(500).send({
         message: "Error retrieving Song with id=" + id,
-      });
-    });
-};
-
-// Find a single Song with an email
-exports.findByEmail = (req, res) => {
-  const email = req.params.email;
-
-  Song.findOne({
-    where: {
-      email: email,
-    },
-  })
-    .then((data) => {
-      if (data) {
-        res.send(data);
-      } else {
-        res.send({ email: "not found" });
-        /*res.status(404).send({
-          message: `Cannot find Song with email=${email}.`
-        });*/
-      }
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: "Error retrieving Song with email=" + email,
       });
     });
 };
