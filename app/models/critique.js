@@ -7,35 +7,35 @@ module.exports = (sequelize, Sequelize) => {
     },
     stagedeportment: {
       type: Sequelize.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     tone: {
       type: Sequelize.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     accuracy: {
       type: Sequelize.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     technique: {
       type: Sequelize.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     interpretation: {
       type: Sequelize.STRING,
-      allowNull: false
+      allowNull: true
     },
     balanceblend: {
       type: Sequelize.STRING,
-      allowNull: false
+      allowNull: true
     },
     diction: {
       type: Sequelize.STRING,
-      allowNull: false
+      allowNull: true
     },
     performance: {
       type: Sequelize.STRING,
-      allowNull: false
+      allowNull: true
     },
   });
 

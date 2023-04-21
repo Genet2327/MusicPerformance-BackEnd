@@ -62,12 +62,15 @@ exports.findAllEvents = (req, res) => {
 
 exports.create = (req, res) => {
   const critique = {
+    stagedeportment: req.body.stagedeportment,
     id: req.body.id,
     tone: req.body.tone,
     accuracy: req.body.accuracy,
     technique: req.body.technique,
     interpretation: req.body.interpretation,
     balanceblend: req.body.balanceblend,
+    diction: req.body.diction,
+    performance: req.body.performance,
   };
 
   Critique.create(critique)
